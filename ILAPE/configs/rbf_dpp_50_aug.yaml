@@ -1,0 +1,89 @@
+ANIMAL_CLASS_BASE:
+  - "cat"
+  - "cow"
+  - "dog"
+ANIMAL_CLASS_INCREMENTAL:
+  - "horse"
+  - "sheep"
+INCREMENTAL_STEP: 1
+MEMORY: 1000
+MEMORY_TYPE: 'fix'        # Another option is of growing
+SAMPLING:
+  STRATERGY: 'rbf-dpp'    # Various strategies for sampling 
+  CLUSTER_SAMPLING: 'random'
+  CLUSTER_PROPORTION: 'same'
+  N_CLUSTERS: 0
+  GAMMA: 50               # Gamma value for rbf
+DATASET:                  # Set paths according to your project setup
+  DATA_ROOT: '../data/'
+  IMAGES: '../data/cropped_images/'
+  AUG_IMAGES: '../data/rotated_images/'
+  ANNOT: '../data/updated_df.csv'
+  AUG_ANNOT: '../data/updated_df_rotated_random_all_three.csv'
+DATA_PRESET:
+  TYPE: 'simple'
+  SIGMA: 2
+  NUM_JOINTS: 17
+  IMAGE_SIZE:
+  - 512
+  - 512
+  HEATMAP_SIZE:
+  - 128
+  - 128
+MODEL:
+  TYPE: 'FastPose'        # Type of model options -> FastPose [AnimalPose] & pose_resnet
+  PRETRAINED: '../animalpose/scripts/exp/179-oracle.yaml/model_Base.pth'   # Use Pretrained weights if available for the base model 
+  TRY_LOAD: ''
+  NUM_DECONV_FILTERS:
+  - 128
+  - 128
+  NUM_LAYERS: 50
+LOSS:
+  TYPE: 'MSELoss'
+DETECTOR:
+  NAME: 'yolo'
+  CONFIG: 'detector/yolo/cfg/yolov3-spp.cfg'
+  WEIGHTS: 'detector/yolo/data/yolov3-spp.weights'
+  NMS_THRES: 0.6
+  CONFIDENCE: 0.05
+TRAIN:
+  BASE_DATA_FOR_INCREMENTAL: 0.1
+  WORLD_SIZE: 4
+  BATCH_SIZE: 13
+  VAL_BATCH_SIZE: 13
+  BEGIN_EPOCH: 0
+  END_EPOCH: 0                    # set the epochs as you wish 
+  OPTIMIZER: 'adam'
+  LR: 0.0001
+  WEIGHT_DECAY: 0
+  LR_FACTOR: 0.1
+  LR_STEP:
+  - 15
+  - 25
+  DPG_MILESTONE: 15
+  DPG_STEP:
+  - 19
+  - 29
+TRAIN_INCREMENTAL:
+  BASE_DATA_FOR_INCREMENTAL: 0.1
+  AUGMENTATION: 'rotation'              # whether to apply TPS augmentation or not 
+  BATCH_SIZE: 13
+  VAL_BATCH_SIZE: 13
+  BEGIN_EPOCH: 0
+  END_EPOCH: 10
+  KD_LOSS: False                        # various options for changing the training functions
+  BALANCED_FINETUNING: False
+  FINETUNING_NON_AUGMENTED: False
+  FINETUNING_OLD_DATA: False
+  FINETUNING_AUGMENTED: False
+  ICARL: False
+  EEIL: False
+  OPTIMIZER: 'adam'
+  LR: 0.0001
+  WEIGHT_DECAY: 0
+  LR_FACTOR: 0.1
+  LR_STEP:
+    - 15
+  DPG_MILESTONE: 15
+  DPG_STEP:
+  - 19 
